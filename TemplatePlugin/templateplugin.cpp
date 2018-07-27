@@ -1,4 +1,5 @@
 #include "templateplugin.h"
+#include "ui_plugin.h"
 
 
 TemplatePlugin::TemplatePlugin()
@@ -32,7 +33,9 @@ QString TemplatePlugin::help()
 
 void TemplatePlugin::setupUi(QWidget *parent)
 {
-    Q_UNUSED(parent)
+    ui = new Ui::PluginGui;
+    ui->setupUi(parent);
+
 }
 
 void TemplatePlugin::processImage(const cv::Mat &inputImage, cv::Mat &outputImage)

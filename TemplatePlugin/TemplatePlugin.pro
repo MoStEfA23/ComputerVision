@@ -37,4 +37,7 @@ unix {
 
 INCLUDEPATH = ../cvplugininterface
 
+FORMS += \
+    plugin.ui
+
 

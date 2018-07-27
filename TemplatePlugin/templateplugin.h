@@ -3,6 +3,11 @@
 
 #include "templateplugin_global.h"
 #include "cvplugininterface.h"
+#include "ui_plugin.h"
+
+namespace Ui {
+    class PluginGui;
+}
 
 class TEMPLATEPLUGINSHARED_EXPORT TemplatePlugin : public QObject, public CvPluginInterface
 {
@@ -24,6 +29,10 @@ signals:
     void updateNeed();
     void errorMessage(QString msg);
     void infoMessage(QString msg);
+
+
+private:
+    Ui::PluginGui *ui;
 };
 
 #endif // TEMPLATEPLUGIN_H
