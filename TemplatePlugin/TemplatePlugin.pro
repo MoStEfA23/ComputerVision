@@ -35,6 +35,6 @@ unix {
     INSTALLS += target
 }
 
-INCLUDEPATH = ../cvplugininterface/cvplugininterface.h
+INCLUDEPATH = ../cvplugininterface
 
 
