@@ -52,8 +52,8 @@ void CopyMakeBorderPlugin::processImage(const cv::Mat &inputImage, cv::Mat &outp
     inputImage.copyTo(outputImage);
 
     int top, bot, left, right;
-     top = bot = inputImage.rows/2;
-     left = right = inputImage.cols/2;
+     top = bot = inputImage.rows * 0.125;
+     left = right = inputImage.cols * 0.125;
 
      cv::copyMakeBorder(inputImage, outputImage, top, bot, left, right, ui->mBorderTypeComboBox->currentIndex());
 }

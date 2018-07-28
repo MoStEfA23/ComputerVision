@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadSettings();//Load settings just after construction
     populatePluginMenu();
-
 }
 
 MainWindow::~MainWindow()
@@ -167,8 +166,6 @@ void MainWindow::onCorrectPluginUpdateNeeded()
                 tickMeter.start();
                 currentPluginInterface->processImage(mOriginalMat, mProcessedMat);
                 tickMeter.stop();
-
-                qDebug() << Q_FUNC_INFO << "The copyBoard process tooked" << tickMeter.getTimeSec() << "seconds";
             }
         }
         else
