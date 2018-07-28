@@ -38,7 +38,10 @@ private slots:
     void onCurrentPluginErrorMessage(QString);
     void onCurrentPluginInfoMessage(QString);
 
+    void onViewOriginalCheckBoxToggled(bool checked);
+
     void openImage();
+    void saveImage();
 
 private:
     static const QString PLUGINS_SUBFOLDER;

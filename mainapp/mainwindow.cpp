@@ -122,6 +122,8 @@ void MainWindow::populatePluginMenu()
 void MainWindow::handleConnections()
 {
     connect(ui->actionOpenImage, SIGNAL(triggered(bool)), this, SLOT(openImage()));
+    connect(ui->actionSaveImage, SIGNAL(triggered(bool)), this, SLOT(saveImage()));
+    connect(ui->mViewOriginalCheckBox, SIGNAL(toggled(bool)), this, SLOT(onViewOriginalCheckBoxToggled(bool)));
 }
 
 /**
@@ -192,10 +194,16 @@ void MainWindow::onCurrentPluginInfoMessage(QString)
 
 }
 
+void MainWindow::onViewOriginalCheckBoxToggled(bool checked)
+{
+    mOriginalPixmap.setVisible(checked);
+    mProcessedPixmap.setVisible(!checked);
+}
+
 void MainWindow::openImage()
 {
     QString imgFileName = QFileDialog::getOpenFileName(this, tr("Select an image"), QDir::homePath(),
-                                                       tr("Image") + "(*.png *.jpg *.bmp)");
+                                                       tr("Image") + "(*.png *.jpg *.bmp)", 0, QFileDialog::DontUseNativeDialog);
 
     mOriginalMat = cv::imread(imgFileName.toStdString());
     if (!mOriginalMat.empty())
@@ -210,5 +218,38 @@ void MainWindow::openImage()
                                   tr("Error"),
                                   tr("Make sure the selected image exist and is accessible"));
         }
+    }
+}
+
+void MainWindow::saveImage()
+{
+    if ((!ui->mViewOriginalCheckBox->isChecked()) && !mProcessedMat.empty())
+    {
+        QString fileName = QFileDialog::getSaveFileName(this,
+                                                        "Save processed image",
+                                                        QDir::currentPath(),
+                                                        "(*.png *.jpg *.bmp)", 0, QFileDialog::DontUseNativeDialog);
+
+        if (!fileName.isEmpty())
+        {
+            qDebug() << fileName;
+            cv::imwrite(fileName.toStdString(), mProcessedMat);
+        }
+    }
+    else if((ui->mViewOriginalCheckBox->isChecked()) && !mOriginalMat.empty())
+    {
+        QString fileName = QFileDialog::getSaveFileName(this,
+                                                        "Save original image",
+                                                        QDir::currentPath(),
+                                                        "(*.png *.jpg *.bmp)", 0, QFileDialog::DontUseNativeDialog);
+
+        if (!fileName.isEmpty())
+        {
+            cv::imwrite(fileName.toStdString(), mOriginalMat);
+        }
+    }
+    else
+    {
+        // nothing to be saved
     }
 }
