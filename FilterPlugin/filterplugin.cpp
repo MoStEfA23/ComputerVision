@@ -48,8 +48,8 @@ void FilterPlugin::processImage(const cv::Mat &inputImage, cv::Mat &outputImage)
     {
     case BILATERAL_FILTER:
     {
-        qDebug() << "BILATERAL_FILTER";
-
+        cv::bilateralFilter(inputImage, outputImage, ui->mBilateralDiameterSpinBox->value(),
+                            ui->mBilateralSigmaColor->value(), ui->mBilateralSigmaSpace->value());
     }
         break;
     case BLUR_FILTER:
