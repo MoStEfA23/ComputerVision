@@ -146,14 +146,14 @@ void MainWindow::onPluginActionTriggered(bool)
     {
         currentPluginInstance->setupUi(mCurrentPluginGui);
 
-        connect(mCurrentPlugin->instance(), SIGNAL(updateNeed()), this, SLOT(onCorrectPluginUpdateNeeded()));
+        connect(mCurrentPlugin->instance(), SIGNAL(updateNeed()), this, SLOT(onCurrentPluginUpdateNeeded()));
         connect(mCurrentPlugin->instance(), SIGNAL(infoMessage(QString)), this, SLOT(onCurrentPluginInfoMessage(QString)));
         connect(mCurrentPlugin->instance(), SIGNAL(errorMessage(QString)), this, SLOT(onCurrentPluginErrorMessage(QString)));
     }
 
 }
 
-void MainWindow::onCorrectPluginUpdateNeeded()
+void MainWindow::onCurrentPluginUpdateNeeded()
 {
     if (!mOriginalMat.empty())
     {
@@ -174,10 +174,10 @@ void MainWindow::onCorrectPluginUpdateNeeded()
         }
     }
 
-    mOriginalImage = QImage(mOriginalMat.data, mOriginalMat.cols, mOriginalMat.rows, mOriginalMat.step, QImage::Format_RGB888);
+    mOriginalImage = QImage(mOriginalMat.data, mOriginalMat.cols, mOriginalMat.rows, static_cast<int>(mOriginalMat.step), QImage::Format_RGB888);
     mOriginalPixmap.setPixmap(QPixmap::fromImage(mOriginalImage.rgbSwapped()));
 
-    mProcessedImage = QImage(mProcessedMat.data, mProcessedMat.cols, mProcessedMat.rows, mProcessedMat.step, QImage::Format_RGB888);
+    mProcessedImage = QImage(mProcessedMat.data, mProcessedMat.cols, mProcessedMat.rows, static_cast<int>(mProcessedMat.step), QImage::Format_RGB888);
     mProcessedPixmap.setPixmap(QPixmap::fromImage(mProcessedImage.rgbSwapped()));
 }
 
@@ -200,12 +200,12 @@ void MainWindow::onViewOriginalCheckBoxToggled(bool checked)
 void MainWindow::openImage()
 {
     QString imgFileName = QFileDialog::getOpenFileName(this, tr("Select an image"), QDir::homePath(),
-                                                       tr("Image") + "(*.png *.jpg *.bmp)", 0, QFileDialog::DontUseNativeDialog);
+                                                       tr("Image") + "(*.png *.jpg *.bmp)", nullptr, QFileDialog::DontUseNativeDialog);
 
     mOriginalMat = cv::imread(imgFileName.toStdString());
     if (!mOriginalMat.empty())
     {
-        onCorrectPluginUpdateNeeded();
+        onCurrentPluginUpdateNeeded();
     }
     else
     {
@@ -225,7 +225,7 @@ void MainWindow::saveImage()
         QString fileName = QFileDialog::getSaveFileName(this,
                                                         "Save processed image",
                                                         QDir::currentPath(),
-                                                        "(*.png *.jpg *.bmp)", 0, QFileDialog::DontUseNativeDialog);
+                                                        "(*.png *.jpg *.bmp)", nullptr, QFileDialog::DontUseNativeDialog);
 
         if (!fileName.isEmpty())
         {
@@ -238,7 +238,7 @@ void MainWindow::saveImage()
         QString fileName = QFileDialog::getSaveFileName(this,
                                                         "Save original image",
                                                         QDir::currentPath(),
-                                                        "(*.png *.jpg *.bmp)", 0, QFileDialog::DontUseNativeDialog);
+                                                        "(*.png *.jpg *.bmp)", nullptr, QFileDialog::DontUseNativeDialog);
 
         if (!fileName.isEmpty())
         {

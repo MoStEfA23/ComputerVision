@@ -34,7 +34,7 @@ private:
 
 private slots:
     void onPluginActionTriggered(bool);
-    void onCorrectPluginUpdateNeeded();
+    void onCurrentPluginUpdateNeeded();
     void onCurrentPluginErrorMessage(QString);
     void onCurrentPluginInfoMessage(QString);
 
