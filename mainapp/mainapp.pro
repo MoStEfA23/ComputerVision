@@ -13,3 +13,15 @@ FORMS += \
 
 HEADERS += \
     mainwindow.h
+
+
+unix: !macx{
+    CONFIG += link_pkgconfig
+    PKGCONFIG += opencv
+}
+
+unix: macx{
+INCLUDEPATH += /usr/local/include
+LIBS += -L"/usr/local/lib" \
+    -lopencv_world
+}

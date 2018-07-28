@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPluginLoader>
+#include <QPointer>
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +18,25 @@ public:
     ~MainWindow();
 
 private:
+    void saveSettings();
+    void loadSettings();
+
+    void populatePluginMenu();
+
+private slots:
+    void onPluginActionTriggered(bool);
+    void onCorrectPluginUpdateNeeded();
+
+private:
     Ui::MainWindow *ui;
+
+    static const QString PLUGINS_SUBFOLDER;
+    static const char* FILE_ONDESK_DYNAMIC_PROPERTY;
+
+    QString mCurrentPluginFile;
+
+    QPointer<QPluginLoader> mCurrentPlugin;
+    QPointer<QWidget> mCurrentPluginGui;
 };
 
 #endif // MAINWINDOW_H

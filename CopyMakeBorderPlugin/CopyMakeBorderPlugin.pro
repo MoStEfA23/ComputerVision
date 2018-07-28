@@ -41,3 +41,4 @@ FORMS += \
     plugin.ui
 
 
+DESTDIR = $$OUT_PWD/../mainapp/cvplugins
