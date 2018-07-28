@@ -38,6 +38,21 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *ev)
+{
+    int result = QMessageBox::warning(this, tr("Exit"), tr("Are you sure?"), QMessageBox::Yes, QMessageBox::No);
+
+    if (result == QMessageBox::Yes)
+    {
+        saveSettings();
+        ev->accept();
+    }
+    else
+    {
+        ev->ignore();
+    }
+}
+
 void MainWindow::saveSettings()
 {
     QSettings settings("Mostefa", "ComputerVision", this);

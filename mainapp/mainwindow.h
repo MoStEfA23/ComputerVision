@@ -6,6 +6,7 @@
 #include <QPointer>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+#include <QCloseEvent>
 
 #include "opencv2/world.hpp"
 
@@ -20,6 +21,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    void closeEvent(QCloseEvent* ev);
 
 private:
     void saveSettings();
