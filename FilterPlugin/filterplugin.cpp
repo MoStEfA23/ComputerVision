@@ -39,6 +39,8 @@ void FilterPlugin::setupUi(QWidget *parent)
     ui = new Ui::PluginGui;
     ui->setupUi(parent);
 
+    ui->mainTabs->setCurrentIndex(0);
+
     handleConnections();
 }
 
@@ -54,7 +56,9 @@ void FilterPlugin::processImage(const cv::Mat &inputImage, cv::Mat &outputImage)
         break;
     case BLUR_FILTER:
     {
-        qDebug() << "BLUR FILTER";
+        cv::blur(inputImage, outputImage,
+                 cv::Size(ui->mBlurKernelSizeSpinBox->value(), ui->mBlurKernelSizeSpinBox->value()),
+                 cv::Point(ui->mBlurAnchoXSpin->value(), ui->mBlurAnchoYSpin->value()));
     }
         break;
     case BOX_FILTER:
