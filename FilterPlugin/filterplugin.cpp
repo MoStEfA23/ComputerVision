@@ -63,10 +63,13 @@ void FilterPlugin::processImage(const cv::Mat &inputImage, cv::Mat &outputImage)
         break;
     case BOX_FILTER:
     {
-        qDebug() << "BOX FILTER";
+        cv::boxFilter(inputImage, outputImage, ui->mBoxDepthSpin->value(),
+                      cv::Size(ui->mBoxKernelSizeSpinBox->value(), ui->mBoxKernelSizeSpinBox->value()),
+                      cv::Point(ui->mBoxAnchoXSpin->value(), ui->mBoxAnchoYSpin->value()),
+                      ui->mBoxNormalCheck->isChecked());
     }
+        break;
     }
-    inputImage.copyTo(outputImage);
 }
 
 void FilterPlugin::handleConnections()
