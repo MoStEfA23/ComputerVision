@@ -6,11 +6,11 @@
 
 QT       += widgets
 
-TARGET = CopyMakeBorderPlugin
+TARGET = FilterPlugin
 TEMPLATE = lib
 CONFIG += plugin
 
-DEFINES += COPYMAKEBORDERPLUGIN_LIBRARY
+DEFINES += FILTERPLUGIN_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -24,23 +24,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        copymakeborderplugin.cpp
+        filterplugin.cpp
 
 HEADERS += \
-        copymakeborderplugin.h \
-        copymakeborderplugin_global.h 
+        filterplugin.h \
+        filterplugin_global.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
 
-INCLUDEPATH += $$PWD/../cvplugininterface
+INCLUDEPATH = ../cvplugininterface
 
 FORMS += \
     plugin.ui
 
-
-
 include(../cvplugins.pri)
+
 

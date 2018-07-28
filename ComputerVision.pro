@@ -12,4 +12,5 @@ TEMPLATE = subdirs
 SUBDIRS += \
     mainapp \
     TemplatePlugin \
-    CopyMakeBorderPlugin
+    CopyMakeBorderPlugin \
+    FilterPlugin
