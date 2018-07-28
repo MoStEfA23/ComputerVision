@@ -18,7 +18,12 @@ class FILTERPLUGINSHARED_EXPORT FilterPlugin : public QObject, public CvPluginIn
     enum e_FilterType{
         BILATERAL_FILTER = 0,
         BLUR_FILTER = 1,
-        BOX_FILTER = 2
+        BOX_FILTER = 2,
+        GAUSSIAN_FILTER = 3,
+        MEDIAN_FILTER = 4,
+        FILTER_2D = 5,
+        DERIVATIVES_FILTER = 6,
+        MORPH_FILTER = 7
     };
 public:
     FilterPlugin();

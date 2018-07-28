@@ -69,6 +69,18 @@ void FilterPlugin::processImage(const cv::Mat &inputImage, cv::Mat &outputImage)
                       ui->mBoxNormalCheck->isChecked());
     }
         break;
+    case GAUSSIAN_FILTER:
+    {
+        cv::GaussianBlur(inputImage, outputImage,
+                         cv::Size(ui->mGaussKernelSizeSpinBox->value(), ui->mGaussKernelSizeSpinBox->value()),
+                         ui->mGaussSigmaXSpin->value(), ui->mGaussSigmaYSpin->value());
+    }
+        break;
+    case MEDIAN_FILTER:
+    {
+        cv::medianBlur(inputImage, outputImage, ui->mMedianApertureSpin->value());
+    }
+        break;
     }
 }
 
