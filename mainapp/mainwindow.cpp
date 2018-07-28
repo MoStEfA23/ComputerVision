@@ -8,6 +8,7 @@
 #include <QLibrary>
 #include <QMessageBox>
 #include <QDebug>
+#include <QFileDialog>
 
 #include "../cvplugininterface/cvplugininterface.h"
 
@@ -20,9 +21,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    loadSettings();//Load settings just after construction
+    ui->graphicsView->setScene(&mGraphicsScene);
+    mGraphicsScene.addItem(&mOriginalPixmap);
+    mGraphicsScene.addItem(&mProcessedPixmap);
+    ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
+    handleConnections();
+
+    loadSettings();//Load settings just after construction
     populatePluginMenu();
+
 }
 
 MainWindow::~MainWindow()
@@ -96,6 +104,11 @@ void MainWindow::populatePluginMenu()
     }
 }
 
+void MainWindow::handleConnections()
+{
+    connect(ui->actionOpenImage, SIGNAL(triggered(bool)), this, SLOT(openImage()));
+}
+
 /**
  * @brief MainWindow::onPluginActionTriggered
  */
@@ -118,11 +131,69 @@ void MainWindow::onPluginActionTriggered(bool)
         currentPluginInstance->setupUi(mCurrentPluginGui);
 
         connect(mCurrentPlugin->instance(), SIGNAL(updateNeed()), this, SLOT(onCorrectPluginUpdateNeeded()));
+        connect(mCurrentPlugin->instance(), SIGNAL(infoMessage(QString)), this, SLOT(onCurrentPluginInfoMessage(QString)));
+        connect(mCurrentPlugin->instance(), SIGNAL(errorMessage(QString)), this, SLOT(onCurrentPluginErrorMessage(QString)));
     }
 
 }
 
 void MainWindow::onCorrectPluginUpdateNeeded()
 {
-    qDebug() << "update needed";
+    if (!mOriginalMat.empty())
+    {
+        if (!mCurrentPlugin.isNull())
+        {
+            CvPluginInterface *currentPluginInterface = dynamic_cast<CvPluginInterface*>(mCurrentPlugin->instance());
+            if (currentPluginInterface)
+            {
+                cv::TickMeter tickMeter;
+                tickMeter.start();
+                currentPluginInterface->processImage(mOriginalMat, mProcessedMat);
+                tickMeter.stop();
+
+                qDebug() << Q_FUNC_INFO << "The copyBoard process tooked" << tickMeter.getTimeSec() << "seconds";
+            }
+        }
+        else
+        {
+            mProcessedMat = mOriginalMat.clone();
+        }
+    }
+
+    mOriginalImage = QImage(mOriginalMat.data, mOriginalMat.cols, mOriginalMat.rows, mOriginalMat.step, QImage::Format_RGB888);
+    mOriginalPixmap.setPixmap(QPixmap::fromImage(mOriginalImage.rgbSwapped()));
+
+    mProcessedImage = QImage(mProcessedMat.data, mProcessedMat.cols, mProcessedMat.rows, mProcessedMat.step, QImage::Format_RGB888);
+    mProcessedPixmap.setPixmap(QPixmap::fromImage(mProcessedImage.rgbSwapped()));
+}
+
+void MainWindow::onCurrentPluginErrorMessage(QString)
+{
+
+}
+
+void MainWindow::onCurrentPluginInfoMessage(QString)
+{
+
+}
+
+void MainWindow::openImage()
+{
+    QString imgFileName = QFileDialog::getOpenFileName(this, tr("Select an image"), QDir::homePath(),
+                                                       tr("Image") + "(*.png *.jpg *.bmp)");
+
+    mOriginalMat = cv::imread(imgFileName.toStdString());
+    if (!mOriginalMat.empty())
+    {
+        onCorrectPluginUpdateNeeded();
+    }
+    else
+    {
+        if (imgFileName.trimmed().isEmpty())
+        {
+            QMessageBox::critical(this,
+                                  tr("Error"),
+                                  tr("Make sure the selected image exist and is accessible"));
+        }
+    }
 }

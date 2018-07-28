@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QPluginLoader>
 #include <QPointer>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
+
+#include "opencv2/world.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -22,21 +26,37 @@ private:
     void loadSettings();
 
     void populatePluginMenu();
+    void handleConnections();
 
 private slots:
     void onPluginActionTriggered(bool);
     void onCorrectPluginUpdateNeeded();
+    void onCurrentPluginErrorMessage(QString);
+    void onCurrentPluginInfoMessage(QString);
+
+    void openImage();
 
 private:
-    Ui::MainWindow *ui;
-
     static const QString PLUGINS_SUBFOLDER;
     static const char* FILE_ONDESK_DYNAMIC_PROPERTY;
+
+
+    Ui::MainWindow *ui;
+    QGraphicsScene mGraphicsScene;
 
     QString mCurrentPluginFile;
 
     QPointer<QPluginLoader> mCurrentPlugin;
     QPointer<QWidget> mCurrentPluginGui;
+
+    QGraphicsPixmapItem mOriginalPixmap;
+    QGraphicsPixmapItem mProcessedPixmap;
+
+    cv::Mat mOriginalMat;
+    cv::Mat mProcessedMat;
+
+    QImage mOriginalImage;
+    QImage mProcessedImage;
 };
 
 #endif // MAINWINDOW_H
